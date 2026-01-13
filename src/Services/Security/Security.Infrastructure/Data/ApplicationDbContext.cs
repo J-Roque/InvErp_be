@@ -12,6 +12,9 @@ namespace Security.Infrastructure.Data
         public DbSet<User> Users => Set<User>();
         public DbSet<Person> Persons => Set<Person>();
         public DbSet<Profile> Profiles => Set<Profile>();
+        public DbSet<Role> Roles => Set<Role>();
+        public DbSet<DocumentType> DocumentTypes => Set<DocumentType>();
+        public DbSet<SecurityLog> SecurityLogs => Set<SecurityLog>();
 
 
         protected override void OnModelCreating(ModelBuilder builder)
