@@ -8,11 +8,20 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Interceptors\" />
     <Folder Include="Grpc\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Auth.Domain\Auth.Domain.csproj" />
+    <ProjectReference Include="..\Auth.Infrastructure\Auth.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

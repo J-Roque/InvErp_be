@@ -1,5 +1,4 @@
-using Security.Infrastructure;
-using Security.Infrastructure.Data;
+using Auth.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

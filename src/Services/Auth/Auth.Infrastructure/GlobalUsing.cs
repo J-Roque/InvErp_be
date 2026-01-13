@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Auth.Infrastructure
-{
-    class GlobalUsing
-    {
-    }
-}
+global using Microsoft.EntityFrameworkCore;
+global using Auth.Infrastructure.Data;
+global using Auth.Domain.Models;
+global using Auth.Domain.Abstractions;

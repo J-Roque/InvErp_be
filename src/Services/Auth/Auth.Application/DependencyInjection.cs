@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Auth.Application
+namespace Auth.Application;
+
+public static class DependencyInjection
 {
-    class DependencyInjection
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
+        services.AddMediatR(config =>
+        {
+            config.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
+        });
+
+        return services;
     }
 }

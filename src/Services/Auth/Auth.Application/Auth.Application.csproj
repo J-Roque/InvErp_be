@@ -7,15 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Configuration\" />
-    <Folder Include="Data\" />
-    <Folder Include="Dtos\" />
-    <Folder Include="Handler\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Wrappers\" />
-    <Folder Include="Utilities\" />
-    <Folder Include="Services\" />
-    <Folder Include="RemoteServices\" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Auth.Domain\Auth.Domain.csproj" />
   </ItemGroup>
 
 </Project>

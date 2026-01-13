@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Auth.Domain
-{
-    class GlobalUsing
-    {
-    }
-}
+global using Auth.Domain.Abstractions;
+global using Auth.Domain.Models;
+global using Auth.Domain.Exceptions;
+global using Auth.Domain.Events;
