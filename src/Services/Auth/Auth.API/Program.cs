@@ -1,4 +1,5 @@
 using Auth.Infrastructure;
+using Auth.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-// Registrar Infrastructure (donde está DapperDataContext)
+// Registrar Application y Infrastructure
+builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
 var app = builder.Build();

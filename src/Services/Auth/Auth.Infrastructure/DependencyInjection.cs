@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Auth.Application.Data;
+using Auth.Application.Interfaces.Persistence;
+using Auth.Infrastructure.Data.Repositories;
 
 namespace Auth.Infrastructure;
 
@@ -16,6 +18,10 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+
+        services.AddScoped<DapperDataContext>();
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
