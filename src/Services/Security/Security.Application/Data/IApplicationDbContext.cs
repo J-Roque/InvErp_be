@@ -6,8 +6,12 @@ namespace Security.Application.Data
 {
     public interface IApplicationDbContext
     {
-        //public DbSet<Person> Persons { get; }
+        DbSet<Person> Persons { get; }
         DbSet<User> Users { get; }
+        DbSet<Role> Roles { get; }
+        DbSet<Profile> Profiles { get; }
 
+        DatabaseFacade Database { get; }
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

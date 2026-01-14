@@ -27,9 +27,9 @@ namespace Security.Infrastructure.Data.Configurations
             
             builder.Property(u => u.IdentityStatusId)
             .HasDefaultValue(IdentityStatus.Active)
-            .HasSentinel(IdentityStatus.Active)
+            .HasSentinel((IdentityStatus)0)
             .HasConversion(
-                u => (int) u, 
+                u => (int) u,
                 dbStatus => (IdentityStatus) dbStatus
             );
 
