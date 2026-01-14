@@ -5,6 +5,7 @@ using Security.Application.Interfaces.Context;
 using Security.Infrastructure;
 using Security.Infrastructure.Data;
 using Security.Infrastructure.Data.Extensions;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,21 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();
 
+// Configurar CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin",
+        policyBuilder =>
+        {
+            policyBuilder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowOrigin");
 
 if (app.Environment.IsDevelopment())
 {

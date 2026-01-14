@@ -19,6 +19,8 @@ namespace Security.Infrastructure.Data.Configurations
                 .WithMany(u => u.UserRoles)
                 .HasForeignKey(ur => ur.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.ToTable("UserRoles");
         }
     }
 }

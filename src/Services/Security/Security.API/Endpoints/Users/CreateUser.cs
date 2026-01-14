@@ -29,7 +29,7 @@ public class CreateUser : ICarterModule
             .Produces<CreateUserResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Crear Usuario")
-            .WithDescription("Crear Usuario")
-            .RequireAuthorization();
+            .WithDescription("Crear Usuario");
+            // .RequireAuthorization(); // TODO: Habilitar despues de crear el primer usuario
     }
 }

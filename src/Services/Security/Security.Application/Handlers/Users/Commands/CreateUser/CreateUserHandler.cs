@@ -117,7 +117,7 @@ public class CreateUserHandler(IApplicationDbContext dbContext)
             documentNumber: userDto.DocumentNumber,
             email: userDto.Email,
             isActive: true,
-            personType: PersonType.Of("Natural")
+            personType: PersonType.Of("N")
         );
 
         return newPerson;

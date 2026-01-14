@@ -1,5 +1,6 @@
 using Auth.Infrastructure;
 using Auth.Application;
+using BuildingBlocks.Exceptions.Handler;
 using Carter;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +19,14 @@ builder.Services.AddCarter();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
+// Registrar el manejador de excepciones
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
+
+// Usar el manejador de excepciones
+app.UseExceptionHandler(options => { });
 
 if (app.Environment.IsDevelopment())
 {
