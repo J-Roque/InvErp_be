@@ -19,6 +19,18 @@ builder.Services.AddCarter();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
+// Configurar CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin",
+        policyBuilder =>
+        {
+            policyBuilder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 // Registrar el manejador de excepciones
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -27,6 +39,8 @@ var app = builder.Build();
 
 // Usar el manejador de excepciones
 app.UseExceptionHandler(options => { });
+
+app.UseCors("AllowOrigin");
 
 if (app.Environment.IsDevelopment())
 {

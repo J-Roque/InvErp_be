@@ -1,3 +1,4 @@
+using BuildingBlocks.Exceptions.Handler;
 using Carter;
 using Security.API.Context;
 using Security.Application;
@@ -5,7 +6,6 @@ using Security.Application.Interfaces.Context;
 using Security.Infrastructure;
 using Security.Infrastructure.Data;
 using Security.Infrastructure.Data.Extensions;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +39,14 @@ builder.Services.AddCors(options =>
         });
 });
 
+// Registrar el manejador de excepciones
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
+
+// Usar el manejador de excepciones
+app.UseExceptionHandler(options => { });
 
 app.UseCors("AllowOrigin");
 
