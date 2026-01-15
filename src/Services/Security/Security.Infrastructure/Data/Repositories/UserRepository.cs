@@ -13,131 +13,65 @@ namespace Security.Infrastructure.Data.Repositories
         {
         }
 
-        //public async Task<UserPaginationResult> GetUsersWithFiltersAndPagination(
-        //    UserPaginationParameter queryParameters)
-        //{
-        //    var parameters = new DynamicParameters();
-        //    parameters.Add("Page", queryParameters.Page, DbType.Int32);
-        //    parameters.Add("PageSize", queryParameters.PageSize, DbType.Int32);
-        //    parameters.Add("IgnorePagination", queryParameters.IgnorePagination, DbType.Boolean);
-        //    parameters.Add("Filters", queryParameters.Filters, DbType.String);
+        public async Task<UserPaginationResult> GetUsersWithFiltersAndPagination(
+            UserPaginationParameter queryParameters)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("Page", queryParameters.Page, DbType.Int32);
+            parameters.Add("PageSize", queryParameters.PageSize, DbType.Int32);
+            parameters.Add("IgnorePagination", queryParameters.IgnorePagination, DbType.Boolean);
+            parameters.Add("Filters", queryParameters.Filters, DbType.String);
 
-        //    using var connection = _dapperDataContext.Connection;
+            using var connection = _dapperDataContext.Connection;
 
-        //    if (connection == null)
-        //    {
-        //        throw new Exception("No existe conexión con la base de datos");
-        //    }
+            if (connection == null)
+            {
+                throw new Exception("No existe conexion con la base de datos");
+            }
 
-        //    await using var result = await connection.QueryMultipleAsync(
-        //        StoredProcedures.GetUsersWithFiltersAndPagination,
-        //        parameters,
-        //        commandType: CommandType.StoredProcedure);
+            await using var result = await connection.QueryMultipleAsync(
+                StoredProcedures.GetUsersWithFiltersAndPagination,
+                parameters,
+                commandType: CommandType.StoredProcedure);
 
-        //    var data = await result.ReadAsync<UserPaginationItem>();
-        //    var totalCount = await result.ReadSingleAsync<long>();
+            var data = await result.ReadAsync<UserPaginationItem>();
+            var totalCount = await result.ReadSingleAsync<long>();
 
-        //    return new UserPaginationResult(
-        //        Data: data,
-        //        TotalCount: totalCount,
-        //        Page: queryParameters.Page,
-        //        PageSize: queryParameters.PageSize
-        //    );
-        //}
+            return new UserPaginationResult(
+                Data: data,
+                TotalCount: totalCount,
+                Page: queryParameters.Page,
+                PageSize: queryParameters.PageSize
+            );
+        }
 
-        //public async Task<UserClientsPaginationResult> GetUserClientsWithFiltersAndPagination(long userId,
-        //    UserClientPaginationParameter queryParameters)
-        //{
-        //    var parameters = new DynamicParameters();
-        //    parameters.Add("UserId", userId, DbType.Int64);
-        //    parameters.Add("Page", queryParameters.Page, DbType.Int32);
-        //    parameters.Add("PageSize", queryParameters.PageSize, DbType.Int32);
-        //    parameters.Add("IgnorePagination", queryParameters.IgnorePagination, DbType.Boolean);
-        //    parameters.Add("Filters", queryParameters.Filters, DbType.String);
+        public Task<UserInfo?> GetUserInfoById(long userId)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("UserId", userId, DbType.Int64);
 
-        //    using var connection = _dapperDataContext.Connection;
+            using var connection = _dapperDataContext.Connection;
 
-        //    if (connection == null)
-        //    {
-        //        throw new Exception("No existe conexión con la base de datos");
-        //    }
+            if (connection == null)
+            {
+                throw new Exception("No existe conexion con la base de datos");
+            }
 
-        //    await using var result = await connection.QueryMultipleAsync(
-        //        StoredProcedures.GetUserClientsWithFiltersAndPagination,
-        //        parameters,
-        //        commandType: CommandType.StoredProcedure);
+            using var result = connection.QueryMultiple(
+                StoredProcedures.GetUserInfoById,
+                parameters,
+                commandType: CommandType.StoredProcedure);
 
-        //    var data = await result.ReadAsync<UserClientPaginationItem>();
-        //    var totalCount = await result.ReadSingleAsync<long>();
+            var data = result.Read<UserInfoSp>().FirstOrDefault();
 
-        //    return new UserClientsPaginationResult(
-        //        Data: data,
-        //        TotalCount: totalCount,
-        //        Page: queryParameters.Page,
-        //        PageSize: queryParameters.PageSize
-        //    );
-        //}
+            if (data == null)
+            {
+                return Task.FromResult<UserInfo?>(null);
+            }
 
-        //public async Task<UserProvidersPaginationResult> GetUserProvidersWithFiltersAndPagination(long userId,
-        //    UserProviderPaginationParameter queryParameters)
-        //{
-        //    var parameters = new DynamicParameters();
-        //    parameters.Add("UserId", userId, DbType.Int64);
-        //    parameters.Add("Page", queryParameters.Page, DbType.Int32);
-        //    parameters.Add("PageSize", queryParameters.PageSize, DbType.Int32);
-        //    parameters.Add("IgnorePagination", queryParameters.IgnorePagination, DbType.Boolean);
-        //    parameters.Add("Filters", queryParameters.Filters, DbType.String);
+            var userInfo = new UserInfo(data);
 
-        //    using var connection = _dapperDataContext.Connection;
-
-        //    if (connection == null)
-        //    {
-        //        throw new Exception("No existe conexión con la base de datos");
-        //    }
-
-        //    await using var result = await connection.QueryMultipleAsync(
-        //        StoredProcedures.GetUserProvidersWithFiltersAndPagination,
-        //        parameters,
-        //        commandType: CommandType.StoredProcedure);
-
-        //    var data = await result.ReadAsync<UserProvidersPaginationItem>();
-        //    var totalCount = await result.ReadSingleAsync<long>();
-
-        //    return new UserProvidersPaginationResult(
-        //        Data: data,
-        //        TotalCount: totalCount,
-        //        Page: queryParameters.Page,
-        //        PageSize: queryParameters.PageSize
-        //    );
-        //}
-
-        //public Task<UserInfo?> GetUserInfoById(long userId)
-        //{
-        //    var parameters = new DynamicParameters();
-        //    parameters.Add("UserId", userId, DbType.Int64);
-
-        //    using var connection = _dapperDataContext.Connection;
-
-        //    if (connection == null)
-        //    {
-        //        throw new Exception("No existe conexión con la base de datos");
-        //    }
-
-        //    using var result = connection.QueryMultiple(
-        //        StoredProcedures.GetUserInfoById,
-        //        parameters,
-        //        commandType: CommandType.StoredProcedure);
-
-        //    var data = result.Read<UserInfoSp>().FirstOrDefault();
-
-        //    if (data == null)
-        //    {
-        //        return Task.FromResult<UserInfo?>(null);
-        //    }
-
-        //    var userInfo = new UserInfo(data);
-
-        //    return Task.FromResult<UserInfo?>(userInfo);
-        //}
+            return Task.FromResult<UserInfo?>(userInfo);
+        }
     }
 }
