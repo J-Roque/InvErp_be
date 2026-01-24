@@ -3,3 +3,4 @@ global using Mapster;
 global using MediatR;
 global using Security.API.Context;
 global using Security.Application.Dtos;
+global using Security.Application.Interfaces.Context;

@@ -19,7 +19,6 @@
     <Folder Include="Configurations\" />
     <Folder Include="Context\" />
     <Folder Include="Converters\" />
-    <Folder Include="Endpoints\" />
     <Folder Include="Middlewares\" />
   </ItemGroup>
 
