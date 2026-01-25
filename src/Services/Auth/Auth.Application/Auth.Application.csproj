@@ -15,11 +15,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Utilities\Mail\Mail.csproj" />
     <ProjectReference Include="..\Auth.Domain\Auth.Domain.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks\BuildingBlocks.csproj" />
     <ProjectReference Include="..\..\..\Utilities\Crypto\Crypto.csproj" />
     <ProjectReference Include="..\..\..\Utilities\Jwt\Jwt.csproj" />
     <ProjectReference Include="..\..\..\Utilities\Common\Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="RemoteServices\Modules\Messaging\Services\" />
   </ItemGroup>
 
 </Project>
