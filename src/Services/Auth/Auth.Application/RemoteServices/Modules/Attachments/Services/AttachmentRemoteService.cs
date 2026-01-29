@@ -4,6 +4,7 @@ using Auth.Application.Configuration;
 using Auth.Application.RemoteServices.Modules.Attachments.Interfaces;
 using Auth.Application.RemoteServices.Modules.Attachments.Models;
 using Auth.Application.RemoteServices.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace Auth.Application.RemoteServices.Modules.Attachments.Services;
 
@@ -17,7 +18,7 @@ public class AttachmentRemoteService(ILogger<AttachmentRemoteService> logger, Ap
             IsSuccess = false,
             Url = ""
         };
-        
+
         return TryCallAsync<SignFileAndUpdateResult>(async () =>
         {
             using var client = new HttpClient();
@@ -43,7 +44,7 @@ public class AttachmentRemoteService(ILogger<AttachmentRemoteService> logger, Ap
 
             return jsonResult;
         }, nameof(SignFileAndUpdate), defaultErrorResult);
-        
-        
+
+
     }
 }

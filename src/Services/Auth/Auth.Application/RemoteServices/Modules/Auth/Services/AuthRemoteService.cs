@@ -4,6 +4,7 @@ using Auth.Application.Configuration;
 using Auth.Application.RemoteServices.Modules.Auth.Interfaces;
 using Auth.Application.RemoteServices.Modules.Auth.Models;
 using Auth.Application.RemoteServices.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace Auth.Application.RemoteServices.Modules.Auth.Services;
 

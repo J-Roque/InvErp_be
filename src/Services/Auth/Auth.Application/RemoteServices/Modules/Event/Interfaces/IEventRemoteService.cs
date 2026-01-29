@@ -1,12 +1,9 @@
-﻿
-
-using Auth.Application.RemoteServices.Modules.Auth.Models;
-using Auth.Application.RemoteServices.Modules.Event.Models;
-using Auth.Application.RemoteServices.Shared;
+﻿using Auth.Application.RemoteServices.Modules.Event.Models;
 
 namespace Auth.Application.RemoteServices.Modules.Event.Interfaces;
 
-public interface IEventRemoteService: IRemoteService
+public interface IEventRemoteService
 {
-    Task<JwtVerifierResult> JwtVerifierAsync(string jwt);
+    Task<SaveEventResult> SaveEvent(SaveEventBody body);
+
 }

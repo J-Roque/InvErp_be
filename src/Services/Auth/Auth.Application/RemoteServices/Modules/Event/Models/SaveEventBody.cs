@@ -11,7 +11,7 @@ public class SaveEventBody
     public long? TokenId { get; set; }
 }
 
-public class SaveEventResponse
+public class SaveEventResult
 {
     public bool IsSuccess { get; set; }
 }
