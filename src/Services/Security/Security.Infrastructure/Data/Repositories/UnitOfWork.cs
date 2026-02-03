@@ -7,6 +7,7 @@ namespace Security.Infrastructure.Data.Repositories
         private bool _disposed;
         private readonly DapperDataContext _dapperDataContext;
         public IUserRepository Users { get; private set; }
+        public IProfileRepository Profiles { get; private set; }
         public UnitOfWork(DapperDataContext dapperDataContext)
         {
             _dapperDataContext = dapperDataContext;

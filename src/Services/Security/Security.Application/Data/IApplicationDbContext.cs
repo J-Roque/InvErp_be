@@ -10,7 +10,7 @@ namespace Security.Application.Data
         DbSet<User> Users { get; }
         DbSet<Role> Roles { get; }
         DbSet<Profile> Profiles { get; }
-
+        DbSet<NavigationItem> NavigationItems { get; }
         DatabaseFacade Database { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
