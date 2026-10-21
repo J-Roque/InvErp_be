@@ -9,6 +9,10 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="Google.Protobuf" Version="3.33.5" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.67.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.70.0" />
+    <PackageReference Include="Grpc.Net.Client.Web" Version="2.67.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.2" />
@@ -17,9 +21,19 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Utilities\Common\Common.csproj" />
+    <ProjectReference Include="..\..\..\Utilities\Mail\Mail.csproj" />
+    <ProjectReference Include="..\..\..\Utilities\Protos\Protos.csproj" />
     <ProjectReference Include="..\Security.Domain\Security.Domain.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks\BuildingBlocks.csproj" />
     <ProjectReference Include="..\..\..\Utilities\Crypto\Crypto.csproj" />
   </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="$(SolutionDir)Utilities/Protos/Protos/EmailToSend/SendEmail.proto" GrpcServices="Client" />
+        <Protobuf Include="$(SolutionDir)Utilities/Protos/Protos/EmailToSend/SaveEmailToSend.proto" GrpcServices="Client" />
+        <Protobuf Include="$(SolutionDir)Utilities/Protos/Protos/Attachment/SignFileAndUpdate.proto" GrpcServices="Client" />
+        <Protobuf Include="$(SolutionDir)Utilities/Protos/Protos/Auth/JwtVerifier.proto" GrpcServices="Client" />
+        <Protobuf Include="$(SolutionDir)Utilities/Protos/Protos/Event/SaveEvent.proto" GrpcServices="Client" />
+    </ItemGroup>
 
 </Project>

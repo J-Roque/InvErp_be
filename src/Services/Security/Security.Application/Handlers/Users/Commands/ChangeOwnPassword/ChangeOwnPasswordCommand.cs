@@ -1,4 +1,5 @@
-﻿using Security.Application.Dtos.General;
+﻿using FluentValidation;
+using Security.Application.Dtos.General;
 using Security.Application.Dtos.Input;
 
 namespace Security.Application.Handlers.Users.Commands.ChangeOwnPassword;
