@@ -3,6 +3,7 @@ using Auth.Application;
 using BuildingBlocks.Exceptions.Handler;
 using Carter;
 using Auth.Application.RemoteServices.Context;
+using Auth.API.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,9 @@ builder.Services.AddCors(options =>
         });
 });
 
+// Limitar peticiones por IP en los endpoints públicos sensibles
+builder.Services.AddAuthRateLimiting();
+
 // Registrar el manejador de excepciones
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -54,6 +58,8 @@ var app = builder.Build();
 app.UseExceptionHandler(options => { });
 
 app.UseCors("AllowOrigin");
+
+app.UseRateLimiter();
 
 if (app.Environment.IsDevelopment())
 {

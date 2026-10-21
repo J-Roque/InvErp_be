@@ -1,4 +1,5 @@
 ﻿using Auth.Application.Dtos.Input;
+using Auth.API.RateLimiting;
 using Auth.Application.Dtos.Result;
 using Auth.Application.Handler.Auth.PasswordResetRequest;
 using Carter;
@@ -21,6 +22,7 @@ public class PasswordResetRequest : ICarterModule
                 var response = result.Adapt<ResetResponse>();
                 return Results.Ok(response.Result);
             })
+            .RequireRateLimiting(RateLimitPolicies.PasswordReset)
             .WithName("PasswordResetRequest")
             .Produces<ResetRequestMessage>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status401Unauthorized)

@@ -1,4 +1,5 @@
-﻿using Auth.Application.Dtos.Input;
+﻿using Auth.API.RateLimiting;
+using Auth.Application.Dtos.Input;
 using Auth.Application.Handler.Auth.ChangeUserPassword;
 using Carter;
 using Mapster;
@@ -21,6 +22,7 @@ public class ChangePassword : ICarterModule
                 var response = result.Adapt<ChangePasswordResponse>();
                 return Results.Ok(response);
             })
+            .RequireRateLimiting(RateLimitPolicies.PasswordReset)
             .WithName("ChangePassword")
             .Produces<ChangePasswordResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status401Unauthorized)
