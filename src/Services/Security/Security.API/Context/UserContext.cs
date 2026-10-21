@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Common.Constants.Claims;
 using Security.Application.Dtos.General;
 using Security.Application.Interfaces.Context;
 
@@ -27,15 +29,25 @@ public class UserContext : IUserContext
             return;
         }
 
-        // Por ahora, valores por defecto para el seed
-        // TODO: Implementar extracción de claims del JWT cuando se habilite autenticación
-        UserId = 0;
-        ProfileId = 1;
-        Roles = [1];
-        Email = "system@system.com";
+        // Datos del usuario autenticado: los claims los crea JwtBearerConfiguration
+        // con la respuesta del verificador de Auth. Sin sesión, todo queda en 0/vacío.
+        var user = context.User;
+
+        UserId = GetLong(user, ClaimConstants.UserId);
+        ProfileId = GetLong(user, ClaimConstants.ProfileId);
+        Roles = user.FindAll(ClaimConstants.RoleId)
+            .Select(c => long.TryParse(c.Value, out var roleId) ? roleId : 0)
+            .Where(roleId => roleId > 0)
+            .ToList();
+        Email = NullIfEmpty(user.FindFirst(ClaimConstants.Email)?.Value);
         Ip = context.Connection.RemoteIpAddress?.ToString();
-        TokenId = 0;
+        TokenId = GetLong(user, ClaimConstants.TokenId);
     }
+
+    private static long GetLong(ClaimsPrincipal user, string claimType) =>
+        long.TryParse(user.FindFirst(claimType)?.Value, out var value) ? value : 0;
+
+    private static string? NullIfEmpty(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
 
     public UserContextDto ToDto()
     {

@@ -57,9 +57,9 @@ public class LoginHandler(IApplicationDbContext dbContext, IUnitOfWork unitOfWor
             userId: user.UserId,
             code: code,
             type: TokenTypes.Login,
-            generatedAt: DateTime.Now,
-            expiresAt: DateTime.Now.AddMinutes(appConstants.Jwt.LoginExpirationMinutes),
-            lastUsedAt: DateTime.Now,
+            generatedAt: DateTime.UtcNow,
+            expiresAt: DateTime.UtcNow.AddMinutes(appConstants.Jwt.LoginExpirationMinutes),
+            lastUsedAt: DateTime.UtcNow,
             ip: ip,
             device: device,
             userAgent: userAgent
