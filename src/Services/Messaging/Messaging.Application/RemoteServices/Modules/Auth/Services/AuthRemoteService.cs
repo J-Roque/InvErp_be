@@ -42,7 +42,7 @@ public class AuthRemoteService(ILogger<AuthRemoteService> logger, AppConstants a
             }
 
             var respContent = await response.Content.ReadAsStringAsync();
-            var jsonResult = JsonSerializer.Deserialize<JwtVerifierResult>(respContent);
+            var jsonResult = JsonSerializer.Deserialize<JwtVerifierResult>(respContent, JsonOptions);
 
             if (jsonResult == null)
             {
