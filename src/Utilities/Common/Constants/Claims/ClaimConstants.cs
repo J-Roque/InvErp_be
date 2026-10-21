@@ -1,0 +1,12 @@
+﻿
+namespace Common.Constants.Claims;
+
+public static class ClaimConstants
+{
+    public const string UserId = "UserId";
+    public const string ProfileId = "ProfileId";
+    public const string RoleId = "RoleId";
+    public const string Email = "Email";
+    public const string Ip = "Ip";
+    public const string TokenId = "TokenId";
+}
