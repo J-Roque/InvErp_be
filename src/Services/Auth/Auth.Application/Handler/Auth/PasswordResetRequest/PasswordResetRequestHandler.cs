@@ -132,7 +132,7 @@ public class PasswordResetRequestHandler(IApplicationDbContext dbContext, IUnitO
                 Username = username,
                 RequestDate = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss"),
                 Jwt = jwt,
-                ResetUrl = $"{appConstants.Frontend.BaseUrl}/auth/config-password?token={jwt}"
+                ResetUrl = $"{appConstants.Frontend.BaseUrl}/login/reset-password?token={jwt}"
             };
 
             var modelStr = JsonSerializer.Serialize(model);
