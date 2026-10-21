@@ -29,11 +29,11 @@
   </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="$(SolutionDir)Utilities/Protos/Protos/EmailToSend/SendEmail.proto" GrpcServices="Client" />
-        <Protobuf Include="$(SolutionDir)Utilities/Protos/Protos/EmailToSend/SaveEmailToSend.proto" GrpcServices="Client" />
-        <Protobuf Include="$(SolutionDir)Utilities/Protos/Protos/Attachment/SignFileAndUpdate.proto" GrpcServices="Client" />
-        <Protobuf Include="$(SolutionDir)Utilities/Protos/Protos/Auth/JwtVerifier.proto" GrpcServices="Client" />
-        <Protobuf Include="$(SolutionDir)Utilities/Protos/Protos/Event/SaveEvent.proto" GrpcServices="Client" />
+        <Protobuf Include="$(MSBuildThisFileDirectory)../../../Utilities/Protos/Protos/EmailToSend/SendEmail.proto" GrpcServices="Client" />
+        <Protobuf Include="$(MSBuildThisFileDirectory)../../../Utilities/Protos/Protos/EmailToSend/SaveEmailToSend.proto" GrpcServices="Client" />
+        <Protobuf Include="$(MSBuildThisFileDirectory)../../../Utilities/Protos/Protos/Attachment/SignFileAndUpdate.proto" GrpcServices="Client" />
+        <Protobuf Include="$(MSBuildThisFileDirectory)../../../Utilities/Protos/Protos/Auth/JwtVerifier.proto" GrpcServices="Client" />
+        <Protobuf Include="$(MSBuildThisFileDirectory)../../../Utilities/Protos/Protos/Event/SaveEvent.proto" GrpcServices="Client" />
     </ItemGroup>
 
 </Project>
