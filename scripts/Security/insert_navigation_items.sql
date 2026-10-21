@@ -1,102 +1,151 @@
 -- =====================================================
--- INSERTS PARA NAVIGATIONITEMS
+-- SEED DE NAVIGATIONITEMS (menú del sidebar del frontend)
 -- =====================================================
--- Estructura: 
--- Id, Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, NavigationItemId, CreatedAt, CreatedBy, LastModified, LastModifiedBy
--- =====================================================
-
--- MENU PRINCIPAL - LEVEL 0 (Items principales sin ParentId)
-
--- 1. Dashboard
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('dashboard', 'Core', 'Dashboard', '/dashboard', 'dashboard', NULL, 1, 1, 0, 1, GETDATE(), 1);
-
--- 2. Administración
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('admin', 'Security', 'Administración', '/admin', 'settings', NULL, 1, 2, 0, 1, GETDATE(), 1);
-
--- 3. Gestión de Usuarios
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('users', 'Security', 'Usuarios', '/users', 'people', NULL, 1, 3, 0, 1, GETDATE(), 1);
-
--- 4. Gestión de Roles
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('roles', 'Security', 'Roles', '/roles', 'security', NULL, 1, 4, 0, 1, GETDATE(), 1);
-
--- 5. Perfiles
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('profiles', 'Security', 'Perfiles', '/profiles', 'assignment_ind', NULL, 1, 5, 0, 1, GETDATE(), 1);
-
--- 6. Configuración
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('settings', 'Core', 'Configuración', '/settings', 'tune', NULL, 1, 6, 0, 1, GETDATE(), 1);
-
--- 7. Reportes
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('reports', 'Core', 'Reportes', '/reports', 'assessment', NULL, 1, 7, 0, 1, GETDATE(), 1);
-
--- =====================================================
--- SUBMENUS - LEVEL 1 (Items hijos de otros items)
--- =====================================================
-
--- Submenu de Administración
--- Nota: Aquí debes reemplazar el ParentId (2) con el ID real generado para 'admin'
-
--- 2.1 Gestión de Permisos
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('permissions', 'Security', 'Permisos', '/admin/permissions', 'lock', 2, 1, 1, 1, 1, GETDATE(), 1);
-
--- 2.2 Auditoría
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('audit', 'Security', 'Auditoría', '/admin/audit', 'history', 2, 1, 2, 1, 1, GETDATE(), 1);
-
--- 2.3 Logs del Sistema
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('system_logs', 'Core', 'Logs del Sistema', '/admin/system-logs', 'description', 2, 1, 3, 1, 1, GETDATE(), 1);
-
--- Submenu de Configuración
--- Nota: Reemplaza ParentId (6) con el ID real generado para 'settings'
-
--- 6.1 Parámetros Generales
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('general_params', 'Core', 'Parámetros Generales', '/settings/general', 'build', 6, 1, 1, 1, 1, GETDATE(), 1);
-
--- 6.2 Configuración de Email
-INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
-VALUES ('email_config', 'Messaging', 'Configuración de Email', '/settings/email', 'email', 6, 1, 2, 1, 1, GETDATE(), 1);
-
--- =====================================================
--- NOTAS IMPORTANTES:
--- =====================================================
--- 1. Los ParentId en los SUBMENUS deben coincidir con los IDs reales generados.
---    Por ejemplo, si 'admin' recibe ID 10, todos los subitems deben tener ParentId = 10
+-- Idempotente: se puede ejecutar varias veces.
+--   1. Inserta o actualiza cada item por su Identifier
+--   2. Desactiva los items que ya no están en esta lista
+--   3. Asigna todos los items activos al perfil ADMIN
 --
--- 2. Ejecuta este script en partes:
---    - Primero los items LEVEL 0 (sin submenu)
---    - Luego obtén los IDs generados
---    - Finalmente ajusta los ParentId de LEVEL 1 y ejecuta esos inserts
---
--- 3. Para ver los IDs generados, ejecuta:
---    SELECT Id, Identifier, Name, Level, ParentId FROM NavigationItem ORDER BY OrderIndex;
---
--- 4. Estructura recomendada con IDs (ejemplo):
---    ID 1: Dashboard (Level 0)
---    ID 2: Administración (Level 0)
---    ID 3: Usuarios (Level 0)
---    ID 4: Roles (Level 0)
---    ID 5: Perfiles (Level 0)
---    ID 6: Configuración (Level 0)
---    ID 7: Reportes (Level 0)
---    ID 8: Permisos (Level 1, ParentId = 2)
---    ID 9: Auditoría (Level 1, ParentId = 2)
---    ID 10: Logs del Sistema (Level 1, ParentId = 2)
---    ID 11: Parámetros Generales (Level 1, ParentId = 6)
---    ID 12: Configuración de Email (Level 1, ParentId = 6)
---
--- =====================================================
--- SCRIPT FINAL COMPLETO CON IDs CORRECTOS (después de obtener los IDs reales):
+-- Icon usa clases de PrimeIcons (las que muestra el frontend).
+-- Los items con hijos no navegan (solo despliegan el submenú);
+-- su Route es solo el prefijo de las rutas hijas.
 -- =====================================================
 
--- Si quieres agregar más items, sigue este patrón:
--- INSERT INTO NavigationItem (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt, CreatedBy)
--- VALUES ('unique_identifier', 'ModuleName', 'Display Name', '/route/path', 'icon_name', NULL_or_PARENTID, 1, ORDER, LEVEL, 1, GETDATE(), 1);
+USE Inventech
+GO
+
+SET NOCOUNT ON;
+SET XACT_ABORT ON;
+
+BEGIN TRANSACTION;
+
+DECLARE @Items TABLE (
+    Identifier       NVARCHAR(100) NOT NULL PRIMARY KEY,
+    ParentIdentifier NVARCHAR(100) NULL,
+    Module           NVARCHAR(100) NOT NULL,
+    Name             NVARCHAR(200) NOT NULL,
+    Route            NVARCHAR(300) NOT NULL,
+    Icon             NVARCHAR(100) NOT NULL,
+    OrderIndex       INT NOT NULL
+);
+
+INSERT INTO @Items (Identifier, ParentIdentifier, Module, Name, Route, Icon, OrderIndex) VALUES
+-- Nivel 0
+('dashboard',            NULL,           'Core',       'Dashboard',              '/dashboard',                 'pi pi-home',             1),
+('warehouse',            NULL,           'Warehouse',  'Almacén',                '/warehouse',                 'pi pi-box',              2),
+('purchases',            NULL,           'Purchases',  'Compras',                '/purchases',                 'pi pi-shopping-cart',    3),
+('sales',                NULL,           'Sales',      'Ventas',                 '/sales',                     'pi pi-dollar',           4),
+('cashier',              NULL,           'Cashier',    'Caja',                   '/cashier',                   'pi pi-wallet',           5),
+('layaway',              NULL,           'Layaway',    'Apartados',              '/layaway',                   'pi pi-bookmark',         6),
+('inventory',            NULL,           'Inventory',  'Inventario',             '/inventory',                 'pi pi-chart-bar',        7),
+('workshop',             NULL,           'Workshop',   'Taller',                 '/workshop',                  'pi pi-wrench',           8),
+('user-management',      NULL,           'Security',   'Gestión de Usuarios',    '/admin/users',               'pi pi-users',            9),
+('receipts',             NULL,           'Receipts',   'Comprobantes',           '/admin/receipts',            'pi pi-file-pdf',        10),
+('settings',             NULL,           'Settings',   'Configuración',          '/admin/settings',            'pi pi-cog',             11),
+
+-- Almacén
+('warehouse-products',      'warehouse', 'Warehouse',  'Productos',              '/warehouse/products',        'pi pi-list',             1),
+('warehouse-categories',    'warehouse', 'Warehouse',  'Categorías',             '/warehouse/categories',      'pi pi-tags',             2),
+('warehouse-brands',        'warehouse', 'Warehouse',  'Marcas',                 '/warehouse/brands',          'pi pi-bookmark',         3),
+('warehouse-presentations', 'warehouse', 'Warehouse',  'Presentaciones',         '/warehouse/presentations',   'pi pi-clone',            4),
+
+-- Compras
+('purchases-new',        'purchases',    'Purchases',  'Nueva Compra',           '/purchases/new',             'pi pi-plus-circle',      1),
+('purchases-history',    'purchases',    'Purchases',  'Historial',              '/purchases/history',         'pi pi-history',          2),
+('purchases-suppliers',  'purchases',    'Purchases',  'Proveedores',            '/purchases/suppliers',       'pi pi-users',            3),
+('purchases-credit',     'purchases',    'Purchases',  'Compras a Crédito',      '/purchases/credit',          'pi pi-credit-card',      4),
+
+-- Ventas
+('sales-new',            'sales',        'Sales',      'Punto de Venta (POS)',   '/sales/new',                 'pi pi-desktop',          1),
+('sales-quotes',         'sales',        'Sales',      'Cotizaciones',           '/quotes',                    'pi pi-file-edit',        2),
+('sales-history',        'sales',        'Sales',      'Historial de Ventas',    '/sales/history',             'pi pi-history',          3),
+('sales-customers',      'sales',        'Sales',      'Clientes',               '/sales/customers',           'pi pi-users',            4),
+('sales-credit',         'sales',        'Sales',      'Ventas a Crédito',       '/sales/credit',              'pi pi-credit-card',      5),
+
+-- Caja
+('cashier-register',     'cashier',      'Cashier',    'Abrir/Cerrar Caja',      '/cashier/register',          'pi pi-lock-open',        1),
+('cashier-movements',    'cashier',      'Cashier',    'Movimientos',            '/cashier/movements',         'pi pi-list',             2),
+('cashier-history',      'cashier',      'Cashier',    'Historial',              '/cashier/history',           'pi pi-history',          3),
+
+-- Inventario
+('inventory-kardex',     'inventory',    'Inventory',  'Kardex',                 '/inventory/kardex',          'pi pi-table',            1),
+('inventory-movements',  'inventory',    'Inventory',  'Movimientos de Stock',   '/inventory/movements',       'pi pi-arrows-h',         2),
+('inventory-reports',    'inventory',    'Inventory',  'Reportes',               '/inventory/reports',         'pi pi-chart-line',       3),
+
+-- Taller
+('workshop-orders',      'workshop',     'Workshop',   'Órdenes de Servicio',    '/workshop/orders',           'pi pi-file',             1),
+('workshop-new',         'workshop',     'Workshop',   'Nueva Orden',            '/workshop/new',              'pi pi-plus',             2),
+('workshop-technicians', 'workshop',     'Workshop',   'Técnicos',               '/workshop/technicians',      'pi pi-user',             3),
+
+-- Gestión de Usuarios
+('users',                'user-management', 'Security', 'Usuarios',              '/admin/users/users',         'pi pi-user',             1),
+('employees',            'user-management', 'Security', 'Empleados',             '/admin/users/employees',     'pi pi-id-card',          2),
+('roles',                'user-management', 'Security', 'Roles',                 '/admin/users/roles',         'pi pi-shield',           3),
+('permissions',          'user-management', 'Security', 'Permisos',              '/admin/users/permissions',   'pi pi-lock',             4),
+
+-- Comprobantes
+('receipts-types',       'receipts',     'Receipts',   'Tipos de Comprobante',   '/admin/receipts/types',      'pi pi-list',             1),
+('receipts-series',      'receipts',     'Receipts',   'Series',                 '/admin/receipts/series',     'pi pi-hashtag',          2),
+('receipts-numbering',   'receipts',     'Receipts',   'Numeración',             '/admin/receipts/numbering',  'pi pi-sort-numeric-up',  3),
+
+-- Configuración
+('settings-general',     'settings',     'Settings',   'General',                '/admin/settings/general',    'pi pi-sliders-h',        1),
+('settings-company',     'settings',     'Settings',   'Empresa',                '/admin/settings/company',    'pi pi-building',         2),
+('settings-system',      'settings',     'Settings',   'Sistema',                '/admin/settings/system',     'pi pi-desktop',          3),
+('settings-tax',         'settings',     'Settings',   'Impuestos',              '/admin/settings/tax',        'pi pi-percentage',       4);
+
+-- 1a. Items de nivel 0
+MERGE NavigationItems AS target
+USING (SELECT * FROM @Items WHERE ParentIdentifier IS NULL) AS src
+    ON target.Identifier = src.Identifier
+WHEN MATCHED THEN UPDATE SET
+    Module = src.Module, Name = src.Name, Route = src.Route, Icon = src.Icon,
+    ParentId = NULL, Level = 0, OrderIndex = src.OrderIndex,
+    IsActive = 1, ShowInMenu = 1, LastModified = SYSUTCDATETIME()
+WHEN NOT MATCHED THEN
+    INSERT (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt)
+    VALUES (src.Identifier, src.Module, src.Name, src.Route, src.Icon, NULL, 1, src.OrderIndex, 0, 1, SYSUTCDATETIME());
+
+-- 1b. Items de nivel 1 (el ParentId se resuelve por Identifier)
+MERGE NavigationItems AS target
+USING (
+    SELECT i.*, p.Id AS ParentId
+    FROM @Items i
+    INNER JOIN NavigationItems p ON p.Identifier = i.ParentIdentifier
+) AS src
+    ON target.Identifier = src.Identifier
+WHEN MATCHED THEN UPDATE SET
+    Module = src.Module, Name = src.Name, Route = src.Route, Icon = src.Icon,
+    ParentId = src.ParentId, Level = 1, OrderIndex = src.OrderIndex,
+    IsActive = 1, ShowInMenu = 1, LastModified = SYSUTCDATETIME()
+WHEN NOT MATCHED THEN
+    INSERT (Identifier, Module, Name, Route, Icon, ParentId, IsActive, OrderIndex, Level, ShowInMenu, CreatedAt)
+    VALUES (src.Identifier, src.Module, src.Name, src.Route, src.Icon, src.ParentId, 1, src.OrderIndex, 1, 1, SYSUTCDATETIME());
+
+-- 2. Items que ya no forman parte del menú
+UPDATE NavigationItems
+SET IsActive = 0, LastModified = SYSUTCDATETIME()
+WHERE IsActive = 1
+  AND Identifier NOT IN (SELECT Identifier FROM @Items);
+
+-- 3. El perfil ADMIN ve todo el menú
+DECLARE @AdminProfileId BIGINT = (SELECT Id FROM Profiles WHERE Code = 'ADMIN');
+
+IF @AdminProfileId IS NULL
+    PRINT 'Aviso: no existe el perfil con Code = ADMIN; no se asignaron items.';
+ELSE
+    INSERT INTO ProfileNavigationItem (ProfileId, NavigationItemId)
+    SELECT @AdminProfileId, ni.Id
+    FROM NavigationItems ni
+    WHERE ni.IsActive = 1
+      AND NOT EXISTS (
+          SELECT 1 FROM ProfileNavigationItem pni
+          WHERE pni.ProfileId = @AdminProfileId AND pni.NavigationItemId = ni.Id
+      );
+
+COMMIT TRANSACTION;
+
+SELECT
+    (SELECT COUNT(*) FROM NavigationItems WHERE IsActive = 1) AS ItemsActivos,
+    (SELECT COUNT(*) FROM ProfileNavigationItem WHERE ProfileId = @AdminProfileId) AS ItemsDelAdmin;
+GO

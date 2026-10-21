@@ -23,13 +23,14 @@ public class GetMyMenuItemsHandler(IApplicationDbContext dbContext, IUnitOfWork 
 
         var menuItemsId = profileInfo.NavigationItemIds;
 
-        if (menuItemsId == null || menuItemsId?.Count == 0)
+        // Un perfil inactivo o sin items asignados no ve ningún menú
+        if (!profileInfo.IsActive || menuItemsId == null || menuItemsId.Count == 0)
         {
-            throw new BadRequestException($"El perfil asociado al usuario {userId} no tiene items de navegación asignados");
+            return new GetMyNavigationItemsResult([]);
         }
 
         var menuItems = await dbContext.NavigationItems
-            .Where(m => menuItemsId != null && menuItemsId.Contains(m.Id))
+            .Where(m => menuItemsId.Contains(m.Id) && m.IsActive && m.ShowInMenu)
             .OrderBy(m => m.Level)
             .ThenBy(m => m.OrderIndex)
             .ToListAsync(cancellationToken);

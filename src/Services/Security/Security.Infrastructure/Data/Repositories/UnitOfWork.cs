@@ -17,6 +17,7 @@ namespace Security.Infrastructure.Data.Repositories
         private void Init()
         {
             Users = new UserRepository(_dapperDataContext);
+            Profiles = new ProfileRepository(_dapperDataContext);
         }
 
         public void BeginTransaction()
