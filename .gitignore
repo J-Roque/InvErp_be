@@ -138,19 +138,22 @@ yarn-error.log
 .env
 .env.local
 .env.*.local
+appsettings.json
+appsettings.Development.json
 appsettings.Local.json
+**/appsettings.json
+**/appsettings.Development.json
 **/appsettings.Local.json
 
 # Docker
 docker-compose.override.yml
 .dockerignore
-
-# NOTA: appsettings.json, appsettings.Development.json y docker-compose.yml
-# se subirán limpios (sin contraseñas) solo en el PRIMER commit
-# Después agrégalos aquí para no trackear cambios locales
+.docker-compose.yml
+D:\C#\InvErp_be\docker-compose.yml
 # Archivos temporales de Claude Code
 tmpclaude-*/
 tmp/
+.claude
 
 
 # OS Files
