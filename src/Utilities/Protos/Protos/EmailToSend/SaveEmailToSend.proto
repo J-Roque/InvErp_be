@@ -1,0 +1,27 @@
+syntax="proto3";
+
+option csharp_namespace = "Utilities.Protos.SaveEmailToSend";
+
+package utilities.protos.saveemailtosend;
+
+message EmailToSendDto {
+  string subject = 1;
+  string template = 2;
+  string data = 3;
+  string recipients = 4;
+  string cc = 5;
+  string bcc = 6;
+  int32 priority = 7;
+}
+
+message SaveEmailToSendRequest {
+  EmailToSendDto email = 1;
+}
+
+message SaveEmailToSendResponse {
+  int64 id = 1;
+}
+
+service SaveEmailToSendService {
+  rpc SaveEmailToSend(SaveEmailToSendRequest) returns (SaveEmailToSendResponse) {}
+}

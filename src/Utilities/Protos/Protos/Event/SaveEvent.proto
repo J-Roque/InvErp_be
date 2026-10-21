@@ -1,0 +1,23 @@
+syntax="proto3";
+
+option csharp_namespace = "Utilities.Protos.SaveEvent";
+
+package utilities.protos.saveevent;
+
+message SaveEventRequest {
+  string activity_description = 1;
+  string ip_address = 2;
+  string module_name = 3;
+  int64 event_type_id = 4;
+  int64 user_id = 5;
+  string data = 6;
+  int64 token_id = 7;
+}
+
+message SaveEventResponse {
+  bool is_success = 1;
+}
+
+service SaveEventService {
+  rpc SaveEvent(SaveEventRequest) returns (SaveEventResponse) {}
+}

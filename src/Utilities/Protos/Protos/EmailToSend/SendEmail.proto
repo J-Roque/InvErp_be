@@ -1,0 +1,30 @@
+﻿
+syntax="proto3";
+
+option csharp_namespace = "Utilities.Protos.SendEmail";
+
+package utilities.protos.sendemail;
+
+message EmailToSendDto {
+  string subject = 1;
+  string template = 2;
+  string data = 3;
+  string recipients = 4;
+  string cc = 5;
+  string bcc = 6;
+  int32 priority = 7;
+}
+
+message SendEmailRequest {
+  EmailToSendDto email = 1;
+}
+
+message SendEmailResponse {
+  bool is_success = 1;
+}
+
+service SendEmailService {
+  rpc SendEmail(SendEmailRequest) returns (SendEmailResponse) {}
+}
+
+

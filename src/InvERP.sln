@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messaging.Domain", "Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messaging.Infrastructure", "Services\Messaging\Messaging.Infrastructure\Messaging.Infrastructure.csproj", "{AF99FC97-2EAD-487E-B684-9030E26AF280}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protos", "Utilities\Protos\Protos.csproj", "{04EBDD31-5E44-48BD-9339-6EC12DD16DEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{AF99FC97-2EAD-487E-B684-9030E26AF280}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF99FC97-2EAD-487E-B684-9030E26AF280}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF99FC97-2EAD-487E-B684-9030E26AF280}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04EBDD31-5E44-48BD-9339-6EC12DD16DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04EBDD31-5E44-48BD-9339-6EC12DD16DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04EBDD31-5E44-48BD-9339-6EC12DD16DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04EBDD31-5E44-48BD-9339-6EC12DD16DEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -134,6 +140,7 @@ Global
 		{7B578294-70F9-460D-8325-0A49C2472C6A} = {868BAF5B-89B2-40C4-8E9B-9099B418EA27}
 		{5CDC4855-F133-458C-A9B4-C0C66A74AA0C} = {868BAF5B-89B2-40C4-8E9B-9099B418EA27}
 		{AF99FC97-2EAD-487E-B684-9030E26AF280} = {868BAF5B-89B2-40C4-8E9B-9099B418EA27}
+		{04EBDD31-5E44-48BD-9339-6EC12DD16DEE} = {B09A23DF-CF3F-45F4-9DC8-4B16A98E8F0B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B3E93037-38C6-4139-9AD4-C524841C2A42}

@@ -1,0 +1,28 @@
+
+syntax="proto3";
+
+option csharp_namespace = "Utilities.Protos.SignFileAndUpdate";
+
+package  utilities.protos.signfileandupdate;
+
+message SignFileAndUpdateRequest {
+  int64 id = 1;
+  string original_file_name = 2;
+  string new_file_name = 3;
+  int64 size = 4;
+  string content_type = 5;
+  string extension = 6;
+  bytes data = 7;
+  string url = 8;
+}
+
+message SignFileAndUpdateResponse {
+  bool is_success = 1;
+  string url = 2;
+}
+
+service SignFileAndUpdateService {
+  rpc SignFileAndUpdate(SignFileAndUpdateRequest) returns (SignFileAndUpdateResponse) {}
+}
+
+

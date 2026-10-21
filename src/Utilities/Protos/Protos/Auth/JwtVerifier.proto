@@ -1,0 +1,36 @@
+syntax="proto3";
+
+option csharp_namespace = "Utilities.Protos.JwtVerifier";
+
+package utilities.protos.jwtverifier;
+
+message JwtRole {
+  int64 id = 1;
+  string name = 2;
+}
+
+message JwtProfile {
+  int64 id = 1;
+  string name = 2;
+}
+
+message JwtVerifierRequest {
+  string jwt = 1;
+}
+
+message JwtVerifierResponse {
+  bool is_valid = 1;
+  string message = 2;
+  int64 user_id = 3;
+  string email = 4;
+  repeated JwtRole roles = 5;
+  JwtProfile profile = 6;
+  string ip = 7;
+  int64 token_id = 8;
+}
+
+service JwtVerifierService {
+  rpc VerifyJwt(JwtVerifierRequest) returns (JwtVerifierResponse) {}
+}
+
+
