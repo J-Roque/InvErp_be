@@ -74,9 +74,14 @@ public static class JwtBearerConfiguration
 
                     OnAuthenticationFailed = async context =>
                     {
+                        // El detalle técnico solo va al log; al cliente no se le exponen errores internos
+                        context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()
+                            .CreateLogger(nameof(JwtBearerConfiguration))
+                            .LogError(context.Exception, "Error al autenticar la petición");
+
                         await WriteJsonErrorResponse(context.Response,
-                            "Error de autenticación: " + context.Exception.Message, 401);
-                        context.Fail(context.Exception.Message);
+                            "No se pudo validar la sesión. Inicie sesión nuevamente.", 401);
+                        context.Fail("No se pudo validar la sesión");
                     },
 
                     OnChallenge = async context =>
