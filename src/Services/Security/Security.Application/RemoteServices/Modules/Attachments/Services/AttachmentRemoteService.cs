@@ -33,7 +33,7 @@ public class AttachmentRemoteService(ILogger<AttachmentRemoteService> logger, Ap
             }
 
             var respContent = await response.Content.ReadAsStringAsync();
-            var jsonResult = JsonSerializer.Deserialize<SignFileAndUpdateResult>(respContent);
+            var jsonResult = JsonSerializer.Deserialize<SignFileAndUpdateResult>(respContent, JsonOptions);
 
             if (jsonResult == null)
             {

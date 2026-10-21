@@ -1,9 +1,13 @@
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 
 namespace Auth.Application.RemoteServices.Shared;
 
 public abstract class BaseRemoteService<T>(ILogger<T> logger)
 {
+    // Las APIs responden en camelCase; sin estas opciones las propiedades quedan en su valor por defecto
+    protected static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+
     protected async Task<TResult> TryCallAsync<TResult>(Func<Task<TResult>> operation, string operationName, TResult fallback)
     {
         try
