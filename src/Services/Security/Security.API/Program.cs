@@ -1,5 +1,6 @@
 using BuildingBlocks.Exceptions.Handler;
 using Carter;
+using Security.API.Configurations;
 using Security.API.Context;
 using Security.Application;
 using Security.Application.Interfaces.Context;
@@ -26,6 +27,10 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 // Registrar HttpContextAccessor y UserContext para auditoría
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();
+
+builder.Services.ConfigureJwtBearer();
+
+builder.Services.AddAuthorization();
 
 // Configurar CORS
 builder.Services.AddCors(options =>
