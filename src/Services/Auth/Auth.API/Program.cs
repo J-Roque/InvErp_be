@@ -4,6 +4,8 @@ using BuildingBlocks.Exceptions.Handler;
 using Carter;
 using Auth.Application.RemoteServices.Context;
 using Auth.API.RateLimiting;
+using Auth.API.Security;
+using BuildingBlocks.Cors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,17 +35,8 @@ builder.Services.Scan(scan => scan
 
 builder.Services.AddScoped<IRemoteServiceContext, RemoteServiceContext>();
 
-// Configurar CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowOrigin",
-        policyBuilder =>
-        {
-            policyBuilder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
-});
+// Configurar CORS: solo el frontend configurado
+builder.Services.AddFrontendCors(builder.Configuration);
 
 // Limitar peticiones por IP en los endpoints públicos sensibles
 builder.Services.AddAuthRateLimiting();
@@ -54,10 +47,13 @@ builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
+// No arrancar fuera de Development con una clave JWT insegura
+app.ValidateJwtSecret();
+
 // Usar el manejador de excepciones
 app.UseExceptionHandler(options => { });
 
-app.UseCors("AllowOrigin");
+app.UseCors(FrontendCorsExtensions.PolicyName);
 
 app.UseRateLimiter();
 

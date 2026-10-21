@@ -1,3 +1,4 @@
+using BuildingBlocks.Cors;
 using BuildingBlocks.Exceptions.Handler;
 using Carter;
 using Security.API.Configurations;
@@ -32,17 +33,8 @@ builder.Services.ConfigureJwtBearer();
 
 builder.Services.AddAuthorization();
 
-// Configurar CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowOrigin",
-        policyBuilder =>
-        {
-            policyBuilder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
-});
+// Configurar CORS: solo el frontend configurado
+builder.Services.AddFrontendCors(builder.Configuration);
 
 // Registrar el manejador de excepciones
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
@@ -53,7 +45,7 @@ var app = builder.Build();
 // Usar el manejador de excepciones
 app.UseExceptionHandler(options => { });
 
-app.UseCors("AllowOrigin");
+app.UseCors(FrontendCorsExtensions.PolicyName);
 
 if (app.Environment.IsDevelopment())
 {

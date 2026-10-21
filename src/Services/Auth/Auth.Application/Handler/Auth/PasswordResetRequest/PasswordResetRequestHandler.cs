@@ -20,52 +20,43 @@ namespace Auth.Application.Handler.Auth.PasswordResetRequest;
 public class PasswordResetRequestHandler(IApplicationDbContext dbContext, IUnitOfWork unitOfWork, IRemoteServiceContext remoteServiceContext, AppConstants appConstants, ILogger<PasswordResetRequestHandler> logger)
     : ICommandHandler<PasswordResetRequestCommand, PasswordResetRequestResult>
 {
+    // Misma respuesta exista o no la cuenta, para no revelar qué usuarios o correos están registrados
+    private const string GenericMessage =
+        "Si los datos corresponden a una cuenta registrada, recibirás en tu correo electrónico un enlace para restablecer tu contraseña.";
+
+    private const int ResetTokenExpirationMinutes = 60;
+
+    // Tiempo mínimo entre envíos a un mismo usuario, para evitar llenarle la bandeja de correos
+    private static readonly TimeSpan ResendCooldown = TimeSpan.FromMinutes(2);
+
     public async Task<PasswordResetRequestResult> Handle(PasswordResetRequestCommand command,
         CancellationToken cancellationToken)
     {
-        var type = command.Reset.Type;
         var user = await unitOfWork.Auth.SearchUserForLogin(command.Reset.Value);
 
-        switch(user)
+        if (user == null || string.IsNullOrWhiteSpace(user.Email))
         {
-            case null when type == "email":
-                throw new AuthUnauthorizedException("User is null", "Email incorrecto o no existe");
-            case null when type == "username":
-                throw new AuthUnauthorizedException("User is null", "Usuario incorrecto o no existe");
-            case null:
-                throw new AuthUnauthorizedException("User is null", "Usuario o email incorrecto o no existe");
+            logger.LogWarning("Solicitud de restablecimiento para una cuenta inexistente o sin email (tipo {Type})",
+                command.Reset.Type);
+            return GenericResult();
         }
 
-        if(user.Email == null)
-        {
-            throw new BadRequestException("User.Email is null", "El usuario no tiene un correo electrónico asociado");
+        var now = DateTime.UtcNow;
+        var activeTokens = await dbContext.Tokens
+            .Where(t => t.UserId == user.UserId && t.Type == TokenTypes.PasswordReset && t.IsActive)
+            .ToListAsync(cancellationToken);
 
+        if (activeTokens.Any(t => t.ExpiresAt >= now && t.GeneratedAt > now - ResendCooldown))
+        {
+            logger.LogInformation("Restablecimiento solicitado de nuevo antes del tiempo mínimo para el usuario {UserId}",
+                user.UserId);
+            return GenericResult();
         }
 
-        var existingToken = await dbContext.Tokens
-            .Where(t => t.UserId == user.UserId && t.Type == TokenTypes.PasswordReset && t.IsActive == true)
-            .OrderByDescending(t => t.GeneratedAt)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (existingToken != null)
+        // Solo el último enlace enviado queda válido
+        foreach (var token in activeTokens)
         {
-            if (existingToken.ExpiresAt >= DateTime.UtcNow)
-            {
-                var errorMessage =
-                    "Ya se ha solicitado un restablecimiento de contraseña. Por favor, revise su correo electrónico.";
-                return new PasswordResetRequestResult(new ResetRequestMessage(errorMessage, null));
-            }
-
-            if (existingToken.LastUsedAt < DateTime.UtcNow)
-            {
-                existingToken.IsActive = false;
-                dbContext.Tokens.Update(existingToken);
-                await dbContext.SaveChangesAsync(cancellationToken);
-
-                var errorMessage =
-                    "El enlace de restablecimiento de contraseña ha expirado. Por favor, solicite uno nuevo.";
-                return new PasswordResetRequestResult(new ResetRequestMessage(errorMessage, null));
-            }
+            token.IsActive = false;
         }
 
         var code = Guid.NewGuid().ToString();
@@ -82,9 +73,9 @@ public class PasswordResetRequestHandler(IApplicationDbContext dbContext, IUnitO
             userId: user.UserId,
             code: code,
             type: TokenTypes.PasswordReset,
-            generatedAt: DateTime.UtcNow,
-            expiresAt: DateTime.UtcNow.AddMinutes(60),
-            lastUsedAt: DateTime.UtcNow,
+            generatedAt: now,
+            expiresAt: now.AddMinutes(ResetTokenExpirationMinutes),
+            lastUsedAt: now,
             ip: null,
             device: null,
             userAgent: null
@@ -93,7 +84,7 @@ public class PasswordResetRequestHandler(IApplicationDbContext dbContext, IUnitO
         await dbContext.Tokens.AddAsync(newToken, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var emailSaved = await SaveEmail(user.Username, jwt, user.Email ?? "");
+        var emailSaved = await SaveEmail(user.Username, jwt, user.Email);
 
         // Si el correo no se pudo registrar, se desactiva el token para que el usuario pueda reintentar
         if (!emailSaved)
@@ -107,34 +98,11 @@ public class PasswordResetRequestHandler(IApplicationDbContext dbContext, IUnitO
                 "No se pudo enviar el enlace de restablecimiento de contraseña. Por favor, intente nuevamente.");
         }
 
-        var maskedEmail = MaskEmail(user.Email ?? "");
-        var message =
-            $"Hemos enviado un enlace de restablecimiento de contraseña a su correo electrónico {maskedEmail}";
-        var res = new ResetRequestMessage(message, null);
-        return new PasswordResetRequestResult(res);
+        return GenericResult();
     }
-    private static string MaskEmail(string email)
-    {
-        if (string.IsNullOrEmpty(email) || !email.Contains('@'))
-            throw new ArgumentException("El correo electrónico no es válido.");
 
-        var parts = email.Split('@');
-        var username = parts[0];
-        var domain = parts[1];
-
-        if (username.Length <= 3)
-        {
-            return $"{username[0]}{new string('*', username.Length - 1)}@{domain}";
-        }
-
-        var halfLength = username.Length / 2;
-        var start = Math.Max(halfLength - 1, 1);
-        var end = Math.Min(halfLength + 2, username.Length - 1);
-
-        var firstPart = username[..start];
-        var lastPart = username[end..];
-        return $"{firstPart}***{lastPart}@{domain}";
-    }
+    private static PasswordResetRequestResult GenericResult() =>
+        new(new ResetRequestMessage(GenericMessage, null));
 
     private async Task<bool> SaveEmail(string username, string jwt, string email)
     {

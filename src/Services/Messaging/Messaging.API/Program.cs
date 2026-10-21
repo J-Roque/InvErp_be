@@ -1,3 +1,4 @@
+using BuildingBlocks.Cors;
 using Messaging.API;
 using Messaging.API.Interceptors;
 using Messaging.Application;
@@ -35,17 +36,8 @@ builder.Services
 builder.Services.AddSingleton<AppConstants>();
 builder.Services.AddSingleton<MailSenderUtility>();
 
-// Configurar CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowOrigin",
-        policyBuilder =>
-        {
-            policyBuilder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
-});
+// Configurar CORS: solo el frontend configurado
+builder.Services.AddFrontendCors(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -63,7 +55,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseCors("AllowOrigin");
+app.UseCors(FrontendCorsExtensions.PolicyName);
 
 app.UseApiServices();
 
