@@ -30,7 +30,7 @@ public class MessagingRemoteService(ILogger<MessagingRemoteService> logger, AppC
             }
 
             var respContent = await response.Content.ReadAsStringAsync();
-            var jsonResult = JsonSerializer.Deserialize<SaveEmailToSendResult>(respContent);
+            var jsonResult = JsonSerializer.Deserialize<SaveEmailToSendResult>(respContent, JsonOptions);
 
             return jsonResult ?? defaultErrorResult;
             
@@ -56,7 +56,7 @@ public class MessagingRemoteService(ILogger<MessagingRemoteService> logger, AppC
             }
 
             var respContent = await response.Content.ReadAsStringAsync();
-            var jsonResult = JsonSerializer.Deserialize<SendEmailResult>(respContent);
+            var jsonResult = JsonSerializer.Deserialize<SendEmailResult>(respContent, JsonOptions);
 
             return jsonResult ?? defaultErrorResult;
             

@@ -29,7 +29,7 @@ public class EventRemoteService(ILogger<EventRemoteService> logger, AppConstants
             }
 
             var respContent = await response.Content.ReadAsStringAsync();
-            var jsonResult = JsonSerializer.Deserialize<SaveEventResult>(respContent);
+            var jsonResult = JsonSerializer.Deserialize<SaveEventResult>(respContent, JsonOptions);
 
             return jsonResult ?? defaultErrorResult;
             

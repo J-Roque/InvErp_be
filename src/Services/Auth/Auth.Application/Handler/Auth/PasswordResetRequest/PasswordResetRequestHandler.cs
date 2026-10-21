@@ -12,11 +12,12 @@ using Jwt.Model;
 using Jwt.Services;
 using Mail.Constants;
 using Mail.Models;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace Auth.Application.Handler.Auth.PasswordResetRequest;
 
-public class PasswordResetRequestHandler(IApplicationDbContext dbContext, IUnitOfWork unitOfWork, IRemoteServiceContext remoteServiceContext, AppConstants appConstants)
+public class PasswordResetRequestHandler(IApplicationDbContext dbContext, IUnitOfWork unitOfWork, IRemoteServiceContext remoteServiceContext, AppConstants appConstants, ILogger<PasswordResetRequestHandler> logger)
     : ICommandHandler<PasswordResetRequestCommand, PasswordResetRequestResult>
 {
     public async Task<PasswordResetRequestResult> Handle(PasswordResetRequestCommand command,
@@ -92,7 +93,19 @@ public class PasswordResetRequestHandler(IApplicationDbContext dbContext, IUnitO
         await dbContext.Tokens.AddAsync(newToken, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        await SaveEmail(user.Username, jwt, user.Email ?? "");
+        var emailSaved = await SaveEmail(user.Username, jwt, user.Email ?? "");
+
+        // Si el correo no se pudo registrar, se desactiva el token para que el usuario pueda reintentar
+        if (!emailSaved)
+        {
+            newToken.IsActive = false;
+            dbContext.Tokens.Update(newToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            throw new InternalServerException(
+                "SaveEmailToSend failed",
+                "No se pudo enviar el enlace de restablecimiento de contraseña. Por favor, intente nuevamente.");
+        }
 
         var maskedEmail = MaskEmail(user.Email ?? "");
         var message =
@@ -123,7 +136,7 @@ public class PasswordResetRequestHandler(IApplicationDbContext dbContext, IUnitO
         return $"{firstPart}***{lastPart}@{domain}";
     }
 
-    private async Task SaveEmail(string username, string jwt, string email)
+    private async Task<bool> SaveEmail(string username, string jwt, string email)
     {
         try
         {
@@ -152,12 +165,17 @@ public class PasswordResetRequestHandler(IApplicationDbContext dbContext, IUnitO
 
             if (newEmail is { Id: > 0 })
             {
-                Console.WriteLine("Email de Solicitud de Cambio de Contraseña Preparado");
+                logger.LogInformation("Email de solicitud de cambio de contraseña preparado (Id {EmailId})", newEmail.Id);
+                return true;
             }
+
+            logger.LogError("Messaging no registró el email de solicitud de cambio de contraseña para {Username}", username);
+            return false;
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error al guardar email de Solicitud de Cambio de Contraseña: ", e.Message);
+            logger.LogError(e, "Error al guardar email de solicitud de cambio de contraseña para {Username}", username);
+            return false;
         }
     }
 
